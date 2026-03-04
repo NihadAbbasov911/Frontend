@@ -1,0 +1,55 @@
+.cars-layout {
+    display: flex;
+    gap: 24px;
+}
+
+.filter-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 24px;
+    position: sticky;
+    top: 90px;
+    height: fit-content;
+}
+
+.filter-sidebar h3 {
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.cars-grid-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+
+.filter-toggle {
+    display: none;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 960px) {
+    .filter-toggle {
+        display: inline-flex;
+    }
+
+    .filter-sidebar {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        width: 100%;
+        border-radius: 0;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .filter-sidebar.open {
+        display: block;
+    }
+
+    .cars-layout {
+        flex-direction: column;
+    }
+}

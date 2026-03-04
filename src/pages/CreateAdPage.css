@@ -1,0 +1,52 @@
+.create-ad-steps {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+}
+
+.step-indicator.active {
+    color: var(--accent-light);
+}
+
+.step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.step-indicator.active .step-num {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.step-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.create-ad-form {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.create-ad-form h2 {
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
