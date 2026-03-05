@@ -7,6 +7,7 @@ import { getAllCities } from '../api/citiesApi';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import './CreateAdPage.css';
+import { createPaymentIntent } from '../api/paymentsApi';
 
 export default function CreateAdPage() {
     const { isLoggedIn } = useAuth();
@@ -39,9 +40,11 @@ export default function CreateAdPage() {
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const filteredModels = form.brandId ? models.filter(m => m.brandId === parseInt(form.brandId)) : models;
 
+    // handleSubmit funksiyasının yenilənmiş forması
     const handleSubmit = async () => {
         setLoading(true);
         try {
+            // 1. Payload hazırlığı (Mövcud kodunuz)
             const payload = {
                 brandId: parseInt(form.brandId), modelId: parseInt(form.modelId), cityId: parseInt(form.cityId),
                 year: parseInt(form.year), vin: form.vin || null, km: parseInt(form.km),
@@ -62,21 +65,42 @@ export default function CreateAdPage() {
                 payload.auctionEndDate = form.auctionEndDate || null;
             }
 
+            // 2. Elanı yarat (Backend-ə göndər)
             const res = await createCarAd(payload);
             const carId = res.data.carId;
-            toast.success(res.data.message);
 
-            // Upload images if any
+
+            // 3. Şəkilləri yüklə (Mövcud kodunuz)
             if (images.length > 0 && carId) {
                 const fd = new FormData();
                 images.forEach(img => fd.append('images', img));
                 await uploadCarImages(carId, fd);
-                toast.success('Şəkillər yükləndi!');
             }
 
-            navigate('/my-cars');
+            // 4. ÖDƏNİŞƏ YÖNLƏNDİRMƏ (Yeni hissə)
+            let paymentResponse;
+
+
+            if (parseInt(form.saleType) == 1) {
+                // Normal elan (Simple, VIP, Premium)
+                paymentResponse = await createPaymentIntent(parseInt(form.listingType),parseInt(carId));
+                console.log(paymentResponse);
+                
+            } else {
+                // Hərrac elanı
+                 paymentResponse = await createPaymentIntent(parseInt(form.listingType),parseInt(carId));
+            }
+
+            if (paymentResponse.data?.url) {
+                // İstifadəçini birbaşa Stripe checkout səhifəsinə göndəririk
+                window.location.href = paymentResponse.data.url;
+            } else {
+                toast.success("Elan yaradıldı!");
+                navigate('/my-cars');
+            }
+
         } catch (err) {
-            toast.error(err.response?.data?.message || err.response?.data || 'Elan yaradıla bilmədi');
+            toast.error(err.response?.data?.message || 'Xəta baş verdi');
         } finally {
             setLoading(false);
         }

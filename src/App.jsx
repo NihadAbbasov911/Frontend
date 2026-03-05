@@ -22,6 +22,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageBrands from './pages/admin/ManageBrands';
 import ManageModels from './pages/admin/ManageModels';
 import ManageCities from './pages/admin/ManageCities';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -54,6 +55,7 @@ function AppRoutes() {
         <Route path="/admin/brands" element={<AdminRoute><ManageBrands /></AdminRoute>} />
         <Route path="/admin/models" element={<AdminRoute><ManageModels /></AdminRoute>} />
         <Route path="/admin/cities" element={<AdminRoute><ManageCities /></AdminRoute>} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Footer />
