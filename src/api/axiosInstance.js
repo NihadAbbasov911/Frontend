@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5164/api',
+  baseURL: 'http://nihad911-001-site1.rtempurl.com/api',
 });
 
 API.interceptors.request.use((config) => {
