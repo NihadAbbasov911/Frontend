@@ -12,7 +12,7 @@ import { createAuctionFee, createPaymentIntent } from '../api/paymentsApi';
 export default function CreateAdPage() {
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(2);
     const [brands, setBrands] = useState([]);
     const [models, setModels] = useState([]);
     const [cities, setCities] = useState([]);
@@ -43,7 +43,7 @@ export default function CreateAdPage() {
     // Validation Logic
     const validateStep = (currentStep) => {
         if (currentStep === 1) {
-            if (!form.brandId || !form.modelId || !form.cityId || !form.year || 
+            if (!form.brandId || !form.modelId || !form.cityId || !form.year ||
                 form.km === '' || !form.color || !form.engineCapacity || !form.horsePower) {
                 toast.warning("Zəhmət olmasa ulduzlu (*) və bütün texniki sahələri doldurun.");
                 return false;
@@ -79,7 +79,7 @@ export default function CreateAdPage() {
 
     const handleSubmit = async () => {
         if (!validateStep(3)) return; // Final check before submission
-        
+
         setLoading(true);
         try {
             const payload = {
@@ -266,8 +266,35 @@ export default function CreateAdPage() {
                         </div>
                         <div className="form-group">
                             <label>Şəkillər *</label>
-                            <input type="file" multiple accept="image/*" onChange={e => setImages([...e.target.files])}
-                                style={{ background: 'transparent', border: '1px dashed var(--border-color)', padding: '20px' }} />
+                            <div className="image-preview-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                                {images.map((file, index) => (
+                                    <div key={index} style={{ position: 'relative', width: '80px', height: '80px' }}>
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt="preview"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                                        />
+                                        {/* Optional: Add a button to remove a specific image */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setImages(images.filter((_, i) => i !== index))}
+                                            style={{ position: 'absolute', top: '-5px', right: '-5px', borderRadius: '50%', border: 'none', background: 'red', color: 'white', cursor: 'pointer' }}
+                                        >
+                                            x
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                onChange={e => {
+                                    if (e.target.files) {
+                                        setImages([...images, ...Array.from(e.target.files)]);
+                                    }
+                                }}
+                            />
                             {images.length > 0 && <small style={{ color: 'var(--text-muted)' }}>{images.length} şəkil seçildi</small>}
                         </div>
                         <div style={{ display: 'flex', gap: '12px' }}>
